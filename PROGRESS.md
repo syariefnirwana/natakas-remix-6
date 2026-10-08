@@ -29,14 +29,14 @@ Dokumen ini adalah acuan progres implementasi fitur untuk AI & developer. Saat m
 - [x] **2.4 Pagination 10 Transaksi per Page:** Berikan paging (10 data per halaman) pada daftar transaksi di Beranda dan Riwayat.
 
 ### 🔹 Batch 3: Fitur Export Laporan Lengkap (Prioritas 3)
-- [ ] **3.1 Pilihan Filter Periode Export:** Pilihan export per harian, mingguan, bulanan, tahunan, seluruhnya, atau custom range tanggal.
-- [ ] **3.2 PDF Styling & Color Coding:**
+- [x] **3.1 Pilihan Filter Periode Export:** Pilihan export per harian, mingguan, bulanan, tahunan, seluruhnya, atau custom range tanggal.
+- [x] **3.2 PDF Styling & Color Coding:**
   - Pemasukan berwarna **Hijau**
   - Pengeluaran berwarna **Merah**
   - Transfer/Pindah Saldo berwarna **Biru**
-- [ ] **3.3 Rincian Saldo Dompet di Laporan:** Menampilkan saldo masing-masing dompet/bank/e-wallet serta total saldo keseluruhan.
-- [ ] **3.4 Watermark PDF:** Watermark semi-transparan dengan teks *"Protected by NataKas"*.
-- [ ] **3.5 Penamaan File Standar:** Format nama file: `Laporan [Periode] keuangan by NataKas [dd-MM-yyyy HH-mm-ss].pdf` (gunakan tanda strip/dash untuk jam karena sistem operasi tidak mengizinkan tanda `/`).
+- [x] **3.3 Rincian Saldo Dompet di Laporan:** Menampilkan saldo masing-masing dompet/bank/e-wallet serta total saldo keseluruhan.
+- [x] **3.4 Watermark PDF:** Watermark semi-transparan dengan teks *"Protected by NataKas"*.
+- [x] **3.5 Penamaan File Standar:** Format nama file: `Laporan [Periode] keuangan by NataKas [dd-MM-yyyy HH-mm-ss].pdf` (gunakan tanda strip/dash untuk jam karena sistem operasi tidak mengizinkan tanda `/`).
 
 ### 🔹 Batch 4: Banner Carousel, Notifikasi & Real-Time Log (Prioritas 4)
 - [ ] **4.1 Auto-swipe Banner Dashboard:** Jika banner promo/pengumuman di dashboard > 1, buat otomatis berganti slide (auto-carousel) dengan interval ~4-5 detik.
@@ -65,7 +65,8 @@ Dokumen ini adalah acuan progres implementasi fitur untuk AI & developer. Saat m
 - **Pekerjaan Terakhir:** Reset database & perbaikan alur login Google.
 - **Pekerjaan Terakhir (update):** Batch 1 selesai.
 - **Pekerjaan Terakhir (update):** Batch 2 selesai.
-- **Next Task:** **Batch 3 (3.1 s/d 3.5)**.
+- **Pekerjaan Terakhir (update):** Batch 3 selesai.
+- **Next Task:** **Batch 4 (4.1 s/d 4.4)**.
 
 ### Revisi setelah Batch 2
 - [x] Konfirmasi hapus transaksi, kategori, dompet, dan banner memakai dialog custom, dengan Batal, status menghapus, dan penanganan kegagalan.
@@ -74,6 +75,10 @@ Dokumen ini adalah acuan progres implementasi fitur untuk AI & developer. Saat m
 ---
 
 ## 📝 Riwayat Perubahan (Changelog)
+- **2026-10-08 — Health check remix + Batch 3 selesai (3.1–3.5)**
+  - Trigger `on_auth_user_created` dipasang ulang, izin tabel (termasuk profiles) dipulihkan, backfill profil, baca avatar terbuka: `drizzle/migrations/0001_remix_health_check.sql`. Bucket avatars tetap private (kebijakan workspace memblokir bucket publik).
+  - 3.1 Pilihan "Rentang tanggal" (Dari/Sampai, lintas bulan/tahun) di mode Custom: `src/routes/_authenticated/laporan.tsx`
+  - 3.2–3.5 PDF berwarna (hijau/merah/biru), tabel saldo per dompet + total (juga di Excel), watermark "Protected by NataKas", nama file standar: `src/lib/export.ts`, tes `src/test/export.test.ts`
 - **2026-10-08 — Revisi hapus custom & profil**
   - Dialog hapus bersama: `src/components/DeleteConfirmation.tsx` (baru), `src/components/ui/alert-dialog.tsx`, `src/components/TxRow.tsx`, `src/components/CategoryManager.tsx`, `src/routes/_authenticated/dompet.tsx`, `src/routes/_authenticated/admin.tsx`.
   - Profil hasil remix yang belum terbentuk dipulihkan, izin baca/ubah profil diberikan tanpa membuka akses publik, trigger signup dipertahankan: `drizzle/migrations/0001_restore_profile_access_and_signup_trigger.sql`.

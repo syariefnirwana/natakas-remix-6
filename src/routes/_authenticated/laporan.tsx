@@ -33,7 +33,7 @@ function Laporan() {
   const { data: flags = {} } = useFlags();
   const weeks = weeksOfMonth(y, m);
 
-  const { range, label, allowedDays, invalid } = useMemo((): { range?: { from: Date; to: Date }; label: string; allowedDays: Set<number> | null; invalid?: boolean } => {
+  const { range, label, allowedDays, invalid } = useMemo((): { range: { from: Date; to: Date } | undefined; label: string; allowedDays: Set<number> | null; invalid?: boolean } => {
     const ml = `${MONTHS[m - 1]} ${y}`;
     switch (mode) {
       case "daily": return { range: dayRange(y, m, d), label: `${d} ${ml}`, allowedDays: null };

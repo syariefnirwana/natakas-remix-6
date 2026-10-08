@@ -52,10 +52,12 @@ export async function exportPdf(c: Ctx) {
   doc.setFontSize(18); doc.text("Laporan NataKas", 14, 18);
   doc.setFontSize(10); doc.text(`${c.owner} · Periode: ${c.periodLabel}`, 14, 25);
   const sections: [string, Tx["type"]][] = [["Pemasukan", "income"], ["Pengeluaran", "expense"], ["Transfer", "transfer"]];
+  let firstSection = true;
   for (const [label, type] of sections) {
     const list = c.txs.filter((x) => x.type === type);
     if (!list.length) continue;
-    const y = sections.findIndex(([, k]) => k === type) === 0 ? 30 : (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
+    const y = firstSection ? 30 : (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
+    firstSection = false;
     doc.setFontSize(13); doc.setTextColor(...TYPE_RGB[type]); doc.text(label, 14, y); doc.setTextColor(0, 0, 0);
     autoTable(doc, {
       startY: y + 3,

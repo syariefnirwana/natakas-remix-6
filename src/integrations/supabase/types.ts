@@ -393,6 +393,13 @@ export type Database = {
           reason: string
         }[]
       }
+      recent_activity: {
+        Args: { _limit?: number }
+        Returns: {
+          created_at: string
+          initial: string
+        }[]
+      }
       wallet_balances: {
         Args: never
         Returns: {

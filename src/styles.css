@@ -28,6 +28,8 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -74,6 +76,8 @@
   --accent-foreground: var(--ink);
   --destructive: oklch(0.64 0.2 28);
   --destructive-foreground: var(--paper);
+  --info: oklch(0.6 0.18 255);
+  --info-foreground: var(--paper);
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--ink);
@@ -153,3 +157,7 @@
     display: none;
   }
 }
+
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker { animation: ticker 60s linear infinite; }
+.ticker:hover { animation-play-state: paused; }

@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { signOut } from "@/components/AppShell";
 import { compressImage, useAvatarUrl, useProfile, useUser } from "@/lib/data";
 import { errMsg } from "@/lib/format";
+import { Switch } from "@/components/ui/switch";
+import { NOTIF_DISMISS_KEY } from "@/components/DashboardWidgets";
 
 export const Route = createFileRoute("/_authenticated/profil")({
   head: () => ({ meta: [{ title: "Profil — NataKas" }, { name: "description", content: "Kelola nama, foto, email, dan kata sandi." }, { property: "og:title", content: "Profil — NataKas" }, { property: "og:description", content: "Kelola nama, foto, email, dan kata sandi." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
@@ -132,9 +134,13 @@ function Profil() {
       </section>
 
       <section className="retro space-y-2 rounded-2xl bg-card p-4">
-        <h2 className="font-extrabold">Pengingat harian</h2>
-        <p className="text-sm">Status izin: <b>{perm === "granted" ? "Diizinkan" : perm === "denied" ? "Ditolak (ubah di pengaturan browser)" : "Belum diminta"}</b></p>
-        {perm !== "granted" && perm !== "denied" && <Button onClick={askNotif}>Izinkan notifikasi</Button>}
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-extrabold">Notifikasi</h2>
+          <Switch aria-label="Notifikasi" checked={perm === "granted"} disabled={perm === "granted"} onCheckedChange={(v) => { if (v) { localStorage.removeItem(NOTIF_DISMISS_KEY); if (perm === "denied") toast.info("Izin ditolak browser — buka pengaturan situs di browser, izinkan notifikasi, lalu muat ulang."); else askNotif(); } }} />
+        </div>
+        <p className="text-sm">Status izin: <b>{perm === "granted" ? "Diizinkan" : perm === "denied" ? "Ditolak" : "Belum diminta"}</b></p>
+        {perm === "denied" && <p className="text-xs text-muted-foreground">Untuk mengaktifkan lagi: ketuk ikon gembok di bilah alamat → Izin situs → Notifikasi → Izinkan, lalu muat ulang halaman.</p>}
+        {perm === "granted" && <p className="text-xs text-muted-foreground">Untuk mematikan, ubah izin notifikasi di pengaturan browser.</p>}
       </section>
 
       <Button variant="outline" className="w-full" onClick={() => signOut(qc, navigate)}>Keluar</Button>

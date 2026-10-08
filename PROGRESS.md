@@ -39,12 +39,12 @@ Dokumen ini adalah acuan progres implementasi fitur untuk AI & developer. Saat m
 - [x] **3.5 Penamaan File Standar:** Format nama file: `Laporan [Periode] keuangan by NataKas [dd-MM-yyyy HH-mm-ss].pdf` (gunakan tanda strip/dash untuk jam karena sistem operasi tidak mengizinkan tanda `/`).
 
 ### 🔹 Batch 4: Banner Carousel, Notifikasi & Real-Time Log (Prioritas 4)
-- [ ] **4.1 Auto-swipe Banner Dashboard:** Jika banner promo/pengumuman di dashboard > 1, buat otomatis berganti slide (auto-carousel) dengan interval ~4-5 detik.
-- [ ] **4.2 Banner Izin Notifikasi:** Banner permintaan akses notifikasi di dashboard:
+- [x] **4.1 Auto-swipe Banner Dashboard:** Jika banner promo/pengumuman di dashboard > 1, buat otomatis berganti slide (auto-carousel) dengan interval ~4-5 detik.
+- [x] **4.2 Banner Izin Notifikasi:** Banner permintaan akses notifikasi di dashboard:
   - Tombol **Setuju (Biru)**: Trigger izin browser notification.
   - Tombol **Tolak (Merah)**: Menutup banner.
-- [ ] **4.3 Toggle Notifikasi di Profil:** Pengaturan di halaman Profil untuk mengaktifkan kembali izin notifikasi jika sebelumnya ditolak.
-- [ ] **4.4 Real-time Public Log Ticker:** Widget riwayat anonim di dashboard menampilkan 10–20 data terbaru: *"User [Inisial/Nama] telah melakukan pencatatan uang Rp ••••• pada dd-mm hh:mm"*.
+- [x] **4.3 Toggle Notifikasi di Profil:** Pengaturan di halaman Profil untuk mengaktifkan kembali izin notifikasi jika sebelumnya ditolak.
+- [x] **4.4 Real-time Public Log Ticker:** Widget riwayat anonim di dashboard menampilkan 10–20 data terbaru: *"User [Inisial/Nama] telah melakukan pencatatan uang Rp ••••• pada dd-mm hh:mm"*.
 
 ### 🔹 Batch 5: Kotak Masuk (Mail in-App) & Testing Notifikasi (Prioritas 5)
 - [ ] **5.1 In-App Mailbox:** Halaman / modal kotak masuk pesan tempat user membaca pengumuman yang dikirim oleh Admin.
@@ -66,7 +66,8 @@ Dokumen ini adalah acuan progres implementasi fitur untuk AI & developer. Saat m
 - **Pekerjaan Terakhir (update):** Batch 1 selesai.
 - **Pekerjaan Terakhir (update):** Batch 2 selesai.
 - **Pekerjaan Terakhir (update):** Batch 3 selesai.
-- **Next Task:** **Batch 4 (4.1 s/d 4.4)**.
+- **Pekerjaan Terakhir (update):** Batch 4 selesai.
+- **Next Task:** **Batch 5 (5.1 s/d 5.2)**.
 
 ### Revisi setelah Batch 2
 - [x] Konfirmasi hapus transaksi, kategori, dompet, dan banner memakai dialog custom, dengan Batal, status menghapus, dan penanganan kegagalan.
@@ -75,6 +76,10 @@ Dokumen ini adalah acuan progres implementasi fitur untuk AI & developer. Saat m
 ---
 
 ## 📝 Riwayat Perubahan (Changelog)
+- **2026-10-09 — Batch 4 selesai (4.1–4.4)**
+  - Carousel banner otomatis (4,5 dtk), banner izin notifikasi Setuju/Tolak, ticker aktivitas anonim: `src/components/DashboardWidgets.tsx`, `src/routes/_authenticated/dashboard.tsx`
+  - Toggle notifikasi di Profil: `src/routes/_authenticated/profil.tsx`
+  - Fungsi `recent_activity` (hanya inisial + waktu, tanpa nominal): `drizzle/migrations/0002_public_activity_feed.sql`
 - **2026-10-08 — Health check remix + Batch 3 selesai (3.1–3.5)**
   - Trigger `on_auth_user_created` dipasang ulang, izin tabel (termasuk profiles) dipulihkan, backfill profil, baca avatar terbuka: `drizzle/migrations/0001_remix_health_check.sql`. Bucket avatars tetap private (kebijakan workspace memblokir bucket publik).
   - 3.1 Pilihan "Rentang tanggal" (Dari/Sampai, lintas bulan/tahun) di mode Custom: `src/routes/_authenticated/laporan.tsx`

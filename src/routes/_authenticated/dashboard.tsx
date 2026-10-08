@@ -6,6 +6,7 @@ import { signedUrl, useFlags, useProfile, useWallets, WALLET_TYPE_ICON, WALLET_T
 import { pageInfo, totals, useTransactions, useTxPage } from "@/lib/tx";
 import { useState } from "react";
 import { Pager, TxGroupedList } from "@/components/TxList";
+import { ActivityTicker, AutoCarousel, NotifBanner } from "@/components/DashboardWidgets";
 import { fromJakarta, jakartaParts, MONTHS, rupiah } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -79,7 +80,7 @@ function Dashboard() {
       </div>
 
       {flags.banners !== false && banners.length > 0 && (
-        <div className="no-scrollbar flex snap-x gap-3 overflow-x-auto">
+        <AutoCarousel count={banners.length}>
           {banners.map((b) => {
             const inner = (
               <div className="retro relative w-full shrink-0 snap-start overflow-hidden rounded-2xl bg-lilac">
@@ -92,10 +93,13 @@ function Dashboard() {
                 <div className="p-4"><div className="font-extrabold">{b.title}</div>{b.body && <p className="text-sm">{b.body}</p>}</div>
               </div>
             );
-            return b.link_url ? <a key={b.id} href={b.link_url} target="_blank" rel="noreferrer" className="w-full shrink-0">{inner}</a> : <div key={b.id} className="w-full shrink-0">{inner}</div>;
+            return b.link_url ? <a key={b.id} href={b.link_url} target="_blank" rel="noreferrer" className="w-full shrink-0 snap-start">{inner}</a> : <div key={b.id} className="w-full shrink-0 snap-start">{inner}</div>;
           })}
-        </div>
+        </AutoCarousel>
       )}
+
+      <NotifBanner />
+      <ActivityTicker />
 
       <section className="retro rounded-2xl bg-card p-4">
         <h2 className="font-extrabold">{MONTHS[p.month - 1]} {p.year}</h2>

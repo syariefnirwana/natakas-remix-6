@@ -49,18 +49,8 @@ export async function exportPdf(c: Ctx) {
   const { default: autoTable } = await import("jspdf-autotable");
   const imgs = await loadImages(c.txs);
   const doc = new jsPDF();
-  const t = totals(c.txs);
   doc.setFontSize(18); doc.text("Laporan NataKas", 14, 18);
   doc.setFontSize(10); doc.text(`${c.owner} · Periode: ${c.periodLabel}`, 14, 25);
-  autoTable(doc, { startY: 30, head: [["Ringkasan", "Jumlah"]], body: [["Pemasukan", rupiah(t.income)], ["Pengeluaran", rupiah(t.expense)], ["Selisih", rupiah(t.net)], ["Transfer (tidak dihitung)", rupiah(t.transfer)]],
-    didParseCell: (d) => { if (d.section === "body") { const k = (["income", "expense", null, "transfer"] as const)[d.row.index]; if (k) d.cell.styles.textColor = TYPE_RGB[k]; } } });
-  const ws = walletSummary(c.wallets);
-  autoTable(doc, {
-    startY: (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 6,
-    head: [["Dompet / Bank / E-wallet", "Saldo saat ini"]],
-    body: [...ws.rows.map((r) => [r.name, rupiah(r.balance)]), ["Total saldo", rupiah(ws.total)]],
-    didParseCell: (d) => { if (d.section === "body" && d.row.index === ws.rows.length) d.cell.styles.fontStyle = "bold"; },
-  });
   const sections: [string, Tx["type"]][] = [["Pemasukan", "income"], ["Pengeluaran", "expense"], ["Transfer", "transfer"]];
   for (const [label, type] of sections) {
     const list = c.txs.filter((x) => x.type === type);

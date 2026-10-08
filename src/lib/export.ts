@@ -74,6 +74,15 @@ export async function exportPdf(c: Ctx) {
       },
     });
   }
+  const ws = walletSummary(c.wallets);
+  const wy = firstSection ? 30 : (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
+  doc.setFontSize(13); doc.text("Dompet / Bank / E-wallet", 14, wy);
+  autoTable(doc, {
+    startY: wy + 3,
+    head: [["Nama", "Saldo saat ini"]],
+    body: [...ws.rows.map((r) => [r.name, rupiah(r.balance)]), ["Total saldo", rupiah(ws.total)]],
+    didParseCell: (d) => { if (d.section === "body" && d.row.index === ws.rows.length) d.cell.styles.fontStyle = "bold"; },
+  });
   const pages = doc.getNumberOfPages();
   const GState = (doc as unknown as { GState: new (o: { opacity: number }) => unknown }).GState;
   for (let i = 1; i <= pages; i++) {

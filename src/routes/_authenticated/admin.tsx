@@ -10,6 +10,7 @@ import { DeleteConfirmation } from "@/components/DeleteConfirmation";
 import { compressImage, signedUrl, useAccountState, useReminder, useUser } from "@/lib/data";
 import { errMsg, fmtDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { showLocalNotification } from "@/lib/inbox";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin Panel — NataKas" }, { name: "description", content: "Kelola akun, banner, fitur, pengumuman, dan pengingat." }, { property: "og:title", content: "Admin Panel — NataKas" }, { property: "og:description", content: "Kelola akun, banner, fitur, pengumuman, dan pengingat." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
@@ -245,7 +246,11 @@ function Reminder() {
       <input className={inp} value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="Pesan pengingat" />
       <label className="block text-sm font-bold">Jam (WIB) <input type="time" className={inp} value={time} onChange={(e) => setTime(e.target.value)} /></label>
       <p className="text-xs text-muted-foreground">Hanya dikirim ke pengguna yang mengizinkan notifikasi browser dan sedang membuka NataKas.</p>
-      <Button onClick={save}>Simpan</Button>
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={save}>Simpan</Button>
+        <Button variant="secondary" onClick={() => showLocalNotification("NataKas (uji coba)", msg || "Ini notifikasi uji coba.").then(() => toast.success("Notifikasi uji dikirim ke perangkat ini")).catch((e) => toast.error(errMsg(e)))}>Tes notifikasi (perangkat ini saja)</Button>
+      </div>
+      <p className="text-xs text-muted-foreground">Tombol tes hanya memunculkan notifikasi di perangkat admin ini, tidak dikirim ke pengguna lain.</p>
     </div>
   );
 }

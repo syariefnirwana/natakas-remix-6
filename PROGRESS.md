@@ -47,8 +47,8 @@ Dokumen ini adalah acuan progres implementasi fitur untuk AI & developer. Saat m
 - [x] **4.4 Real-time Public Log Ticker:** Widget riwayat anonim di dashboard menampilkan 10–20 data terbaru: *"User [Inisial/Nama] telah melakukan pencatatan uang Rp ••••• pada dd-mm hh:mm"*.
 
 ### 🔹 Batch 5: Kotak Masuk (Mail in-App) & Testing Notifikasi (Prioritas 5)
-- [ ] **5.1 In-App Mailbox:** Halaman / modal kotak masuk pesan tempat user membaca pengumuman yang dikirim oleh Admin.
-- [ ] **5.2 Uji Coba Notifikasi Mandiri di Admin Panel:** Tombol test notifikasi di Admin Panel yang hanya mengirim notifikasi simulasi ke device admin sendiri (bukan broadcast ke semua user).
+- [x] **5.1 In-App Mailbox:** Halaman / modal kotak masuk pesan tempat user membaca pengumuman yang dikirim oleh Admin.
+- [x] **5.2 Uji Coba Notifikasi Mandiri di Admin Panel:** Tombol test notifikasi di Admin Panel yang hanya mengirim notifikasi simulasi ke device admin sendiri (bukan broadcast ke semua user).
 
 ### 🔹 Batch 6: Onboarding Interaktif (Tutorial New User) (Prioritas 6)
 - [ ] **6.1 Interactive Walkthrough Animasi:**
@@ -67,7 +67,8 @@ Dokumen ini adalah acuan progres implementasi fitur untuk AI & developer. Saat m
 - **Pekerjaan Terakhir (update):** Batch 2 selesai.
 - **Pekerjaan Terakhir (update):** Batch 3 selesai.
 - **Pekerjaan Terakhir (update):** Batch 4 selesai.
-- **Next Task:** **Batch 5 (5.1 s/d 5.2)**.
+- **Pekerjaan Terakhir (update):** Batch 5 selesai.
+- **Next Task:** **Batch 6 (6.1)**.
 
 ### Revisi setelah Batch 2
 - [x] Konfirmasi hapus transaksi, kategori, dompet, dan banner memakai dialog custom, dengan Batal, status menghapus, dan penanganan kegagalan.
@@ -76,6 +77,9 @@ Dokumen ini adalah acuan progres implementasi fitur untuk AI & developer. Saat m
 ---
 
 ## 📝 Riwayat Perubahan (Changelog)
+- **2026-10-09 — Batch 5 selesai (5.1–5.2)**
+  - Kotak masuk pengumuman + ikon lonceng berlencana belum dibaca: `src/routes/_authenticated/kotak-masuk.tsx`, `src/lib/inbox.ts`, `src/components/AppShell.tsx`; tabel `announcement_reads`: `drizzle/migrations/0003_inbox.sql`
+  - Tombol tes notifikasi khusus perangkat admin di tab Pengingat: `src/routes/_authenticated/admin.tsx`
 - **2026-10-09 — Batch 4 selesai (4.1–4.4)**
   - Carousel banner otomatis (4,5 dtk), banner izin notifikasi Setuju/Tolak, ticker aktivitas anonim: `src/components/DashboardWidgets.tsx`, `src/routes/_authenticated/dashboard.tsx`
   - Toggle notifikasi di Profil: `src/routes/_authenticated/profil.tsx`

@@ -1,11 +1,23 @@
 import { Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { Home, PlusCircle, History, Wallet, FileText, User, Shield, LogOut } from "lucide-react";
+import { Home, PlusCircle, History, Wallet, FileText, User, Shield, LogOut, Bell } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAccountState, useAvatarUrl, useProfile, useReminder, useUser } from "@/lib/data";
 import { jakartaParts, dayKey } from "@/lib/format";
 import { Logo } from "./Logo";
+import { useInbox } from "@/lib/inbox";
+
+function InboxBell() {
+  const { data = [] } = useInbox();
+  const unread = data.filter((m) => !m.read).length;
+  return (
+    <Link to="/kotak-masuk" aria-label="Kotak masuk" className="retro-sm press relative flex size-10 shrink-0 items-center justify-center rounded-xl bg-card">
+      <Bell className="size-5" />
+      {unread > 0 && <span className="absolute -right-1 -top-1 flex min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground">{unread > 9 ? "9+" : unread}</span>}
+    </Link>
+  );
+}
 
 const NAV = [
   { to: "/dashboard", label: "Beranda", icon: Home },
@@ -96,12 +108,13 @@ export function AppShell() {
           {state?.is_admin && (
             <Link to="/admin" aria-label="Admin Panel" className="retro-sm press flex size-10 items-center justify-center rounded-xl bg-lilac"><Shield className="size-5" /></Link>
           )}
+          <InboxBell />
           <HeaderAvatar />
         </div>
       </header>
 
       <main className="mx-auto w-full min-w-0 max-w-5xl flex-1 px-4 pb-28 pt-5 md:px-8 md:pb-10 md:pt-6">
-        <div className="mb-4 hidden justify-end md:flex"><HeaderAvatar /></div>
+        <div className="mb-4 hidden justify-end gap-2 md:flex"><InboxBell /><HeaderAvatar /></div>
         <Outlet />
       </main>
 

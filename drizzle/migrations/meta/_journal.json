@@ -8,6 +8,13 @@
       "when": 1791478213518,
       "tag": "0000_baseline_existing_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791478317500,
+      "tag": "0001_remix_health_check",
+      "breakpoints": true
     }
   ]
 }

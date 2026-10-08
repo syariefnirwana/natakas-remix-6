@@ -55,14 +55,14 @@ export async function exportPdf(c: Ctx) {
   for (const [label, type] of sections) {
     const list = c.txs.filter((x) => x.type === type);
     if (!list.length) continue;
-    const y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
+    const y = sections.findIndex(([, k]) => k === type) === 0 ? 30 : (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
     doc.setFontSize(13); doc.setTextColor(...TYPE_RGB[type]); doc.text(label, 14, y); doc.setTextColor(0, 0, 0);
     autoTable(doc, {
       startY: y + 3,
       headStyles: { fillColor: TYPE_RGB[type] },
       didParseCell: (d) => { if (d.section === "body" && d.column.index === 4) d.cell.styles.textColor = TYPE_RGB[type]; },
-      head: [["Waktu", type === "transfer" ? "Dompet" : "Dompet", "Kategori", "Rincian", "Nominal", "Bukti"]],
-      body: list.map((x) => { const r = rowOf(x, c); return [r.time, r.wallet, r.cat, r.note, rupiah(r.amount), imgs.has(x.id) ? "" : "-"]; }),
+      head: [["Waktu", "Dompet", "Kategori", "Rincian", "Nominal", "Bukti"]],
+      body: list.map((x) => { const r = rowOf(x, c); return [r.time, r.wallet.replace("→", ">"), r.cat, r.note, rupiah(r.amount), imgs.has(x.id) ? "" : "-"]; }),
       columnStyles: { 5: { cellWidth: 22, minCellHeight: imgs.size ? 20 : 0 } },
       didDrawCell: (d) => {
         if (d.section === "body" && d.column.index === 5) {

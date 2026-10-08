@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAccountState, useAvatarUrl, useProfile, useReminder, useUser } from "@/lib/data";
 import { jakartaParts, dayKey } from "@/lib/format";
 import { Logo } from "./Logo";
+import { showLocalNotification } from "@/lib/inbox";
 import { useInbox } from "@/lib/inbox";
 
 function InboxBell() {

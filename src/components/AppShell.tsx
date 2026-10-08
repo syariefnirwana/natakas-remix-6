@@ -45,11 +45,7 @@ function useDailyReminder() {
       const k = `natakas-reminder-${dayKey(new Date())}`;
       if (hm >= r.remind_time && !localStorage.getItem(k)) {
         localStorage.setItem(k, "1");
-        try {
-          new Notification("NataKas", { body: r.message, icon: "/favicon.ico" });
-        } catch {
-          /* some browsers require service worker notifications */
-        }
+        showLocalNotification("NataKas", r.message).catch(() => {});
       }
     };
     tick();

@@ -63,7 +63,7 @@ export function NotifBanner() {
       <Bell className="size-6 shrink-0" />
       <p className="flex-1 text-sm font-bold">Aktifkan notifikasi agar NataKas bisa mengingatkan kamu mencatat keuangan.</p>
       <div className="flex gap-2">
-        <Button className="bg-info text-info-foreground hover:bg-info/90" onClick={async () => { await Notification.requestPermission(); close(); }}>Setuju</Button>
+        <Button className="bg-info text-info-foreground hover:bg-info/90" onClick={async () => { const p = await Notification.requestPermission(); if (p === "granted" && "serviceWorker" in navigator) navigator.serviceWorker.register("/notify-sw.js").catch(() => {}); close(); }}>Setuju</Button>
         <Button variant="destructive" onClick={close}>Tolak</Button>
       </div>
     </div>

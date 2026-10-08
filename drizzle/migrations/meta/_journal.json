@@ -22,6 +22,13 @@
       "when": 1791479326640,
       "tag": "0002_public_activity_feed",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791479719797,
+      "tag": "0003_inbox",
+      "breakpoints": true
     }
   ]
 }

@@ -7,6 +7,7 @@ import { dayRange, totals, useTransactions, weeksOfMonth } from "@/lib/tx";
 import { daysInMonth, errMsg, fromJakarta, jakartaParts, MONTHS, rupiah, dayKey } from "@/lib/format";
 import { exportExcel, exportPdf } from "@/lib/export";
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/laporan")({
   head: () => ({ meta: [{ title: "Laporan — NataKas" }, { name: "description", content: "Laporan keuangan dan ekspor PDF/Excel." }, { property: "og:title", content: "Laporan — NataKas" }, { property: "og:description", content: "Laporan keuangan dan ekspor PDF/Excel." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
@@ -23,14 +24,16 @@ function Laporan() {
   const [m, setM] = useState(now.month);
   const [d, setD] = useState(now.day);
   const [week, setWeek] = useState(0);
-  const [customKind, setCustomKind] = useState<"days" | "weeks">("days");
+  const [customKind, setCustomKind] = useState<"days" | "weeks" | "range">("range");
+  const [rFrom, setRFrom] = useState(() => ({ y: now.year, m: now.month, d: 1 }));
+  const [rTo, setRTo] = useState(() => ({ y: now.year, m: now.month, d: now.day }));
   const [pickDays, setPickDays] = useState<number[]>([]);
   const [pickWeeks, setPickWeeks] = useState<number[]>([]);
   const [busy, setBusy] = useState(false);
   const { data: flags = {} } = useFlags();
   const weeks = weeksOfMonth(y, m);
 
-  const { range, label, allowedDays } = useMemo(() => {
+  const { range, label, allowedDays, invalid } = useMemo((): { range: { from: Date; to: Date } | undefined; label: string; allowedDays: Set<number> | null; invalid?: boolean } => {
     const ml = `${MONTHS[m - 1]} ${y}`;
     switch (mode) {
       case "daily": return { range: dayRange(y, m, d), label: `${d} ${ml}`, allowedDays: null };
@@ -42,12 +45,17 @@ function Laporan() {
       case "yearly": return { range: { from: fromJakarta(y, 1, 1), to: fromJakarta(y + 1, 1, 1) }, label: String(y), allowedDays: null };
       case "all": return { range: undefined, label: "Semua riwayat", allowedDays: null };
       case "custom": {
+        if (customKind === "range") {
+          const a = fromJakarta(rFrom.y, rFrom.m, rFrom.d), b = dayRange(rTo.y, rTo.m, rTo.d).to;
+          const ok = a < b;
+          return { range: ok ? { from: a, to: b } : { from: a, to: a }, label: `${rFrom.d} ${MONTHS[rFrom.m - 1]} ${rFrom.y} sd ${rTo.d} ${MONTHS[rTo.m - 1]} ${rTo.y}`, allowedDays: null, invalid: !ok };
+        }
         const days = customKind === "days" ? pickDays : pickWeeks.flatMap((i) => weeks[i] ?? []);
         const lbl = customKind === "days" ? `Tgl ${[...pickDays].sort((a, b) => a - b).join(",")} ${ml}` : `Minggu ke-${[...pickWeeks].sort().map((i) => i + 1).join(",")} ${ml}`;
         return { range: { from: fromJakarta(y, m, 1), to: dayRange(y, m, daysInMonth(y, m)).to }, label: lbl, allowedDays: new Set(days) };
       }
     }
-  }, [mode, y, m, d, week, weeks, customKind, pickDays, pickWeeks]);
+  }, [mode, y, m, d, week, weeks, customKind, pickDays, pickWeeks, rFrom, rTo]);
 
   const { data: raw = [], isLoading } = useTransactions(range, 5000);
   const txs = allowedDays ? raw.filter((t) => allowedDays.has(Number(dayKey(t.occurred_at).slice(8)))) : raw;
@@ -66,7 +74,8 @@ function Laporan() {
   if (flags.reports === false) return <div className="retro rounded-2xl bg-card p-6 font-bold">Fitur laporan sedang dinonaktifkan oleh admin.</div>;
 
   const run = async (fmt: "pdf" | "xlsx") => {
-    if (mode === "custom" && !allowedDays?.size) return toast.error("Pilih tanggal atau minggu dulu");
+    if (invalid) return toast.error("Tanggal akhir harus setelah tanggal awal");
+    if (mode === "custom" && customKind !== "range" && !allowedDays?.size) return toast.error("Pilih tanggal atau minggu dulu");
     setBusy(true);
     try {
       const ctx = { txs, wallets, cats, periodLabel: label, owner: profile?.display_name ?? profile?.email ?? "" };
@@ -84,7 +93,7 @@ function Laporan() {
       <h1 className="text-3xl font-extrabold">Laporan</h1>
       <div className="flex flex-wrap gap-2">{MODES.map(([k, l]) => <button key={k} className={chip(mode === k)} onClick={() => setMode(k)}>{l}</button>)}</div>
 
-      {mode !== "all" && (
+      {mode !== "all" && !(mode === "custom" && customKind === "range") && (
         <div className="flex flex-wrap gap-2">
           {mode === "daily" && <select className={sel} value={d} onChange={(e) => setD(+e.target.value)}>{Array.from({ length: daysInMonth(y, m) }, (_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}</select>}
           {mode !== "yearly" && <select className={sel} value={m} onChange={(e) => { setM(+e.target.value); setPickDays([]); setPickWeeks([]); setWeek(0); }}>{MONTHS.map((n, i) => <option key={n} value={i + 1}>{n}</option>)}</select>}
@@ -95,15 +104,21 @@ function Laporan() {
 
       {mode === "custom" && (
         <div className="retro space-y-3 rounded-2xl bg-card p-4">
-          <div className="flex gap-2"><button className={chip(customKind === "days")} onClick={() => setCustomKind("days")}>Pilih tanggal</button><button className={chip(customKind === "weeks")} onClick={() => setCustomKind("weeks")}>Pilih minggu</button></div>
-          {customKind === "days" ? (
+          <div className="flex flex-wrap gap-2"><button className={chip(customKind === "range")} onClick={() => setCustomKind("range")}>Rentang tanggal</button><button className={chip(customKind === "days")} onClick={() => setCustomKind("days")}>Pilih tanggal</button><button className={chip(customKind === "weeks")} onClick={() => setCustomKind("weeks")}>Pilih minggu</button></div>
+          {customKind === "range" ? (
+            <div className="space-y-2">
+              <DateStepper label="Dari" v={rFrom} onChange={setRFrom} />
+              <DateStepper label="Sampai" v={rTo} onChange={setRTo} />
+              {invalid && <p className="text-sm font-bold text-destructive">Tanggal akhir harus setelah tanggal awal.</p>}
+            </div>
+          ) : customKind === "days" ? (
             <div className="grid grid-cols-7 gap-1">
               {Array.from({ length: daysInMonth(y, m) }, (_, i) => i + 1).map((v) => <button key={v} onClick={() => setPickDays(toggle(pickDays, v))} className={cn("num rounded-lg border-2 border-ink py-1.5 text-sm font-bold", pickDays.includes(v) ? "bg-primary" : "bg-paper")}>{v}</button>)}
             </div>
           ) : (
             <div className="flex flex-wrap gap-2">{weeks.map((w, i) => <button key={i} className={chip(pickWeeks.includes(i))} onClick={() => setPickWeeks(toggle(pickWeeks, i))}>Minggu ke-{i + 1} ({w[0]}–{w[w.length - 1]})</button>)}</div>
           )}
-          <p className="text-xs text-muted-foreground">Minggu dihitung Senin–Minggu; minggu pertama memuat tanggal 1.</p>
+          {customKind !== "range" && <p className="text-xs text-muted-foreground">Minggu dihitung Senin–Minggu; minggu pertama memuat tanggal 1.</p>}
         </div>
       )}
 
@@ -143,4 +158,25 @@ function Laporan() {
 
 function Stat({ label, v, cls }: { label: string; v: number; cls: string }) {
   return <div className={cn("rounded-xl p-3", cls)}><div className="text-xs font-bold">{label}</div><div className="num font-bold">{rupiah(v)}</div></div>;
+}
+
+type YMD = { y: number; m: number; d: number };
+function shift(v: YMD, days: number, months = 0): YMD {
+  const dt = new Date(Date.UTC(v.y, v.m - 1 + months, 1));
+  const max = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth() + 1, 0)).getUTCDate();
+  dt.setUTCDate(Math.min(v.d, max) + days);
+  return { y: dt.getUTCFullYear(), m: dt.getUTCMonth() + 1, d: dt.getUTCDate() };
+}
+function DateStepper({ label, v, onChange }: { label: string; v: YMD; onChange: (v: YMD) => void }) {
+  const btn = "retro-sm flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-paper";
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="w-14 text-sm font-bold">{label}</span>
+      <button aria-label={`${label} bulan sebelumnya`} className={btn} onClick={() => onChange(shift(v, 0, -1))}><ChevronsLeft className="h-4 w-4" /></button>
+      <button aria-label={`${label} hari sebelumnya`} className={btn} onClick={() => onChange(shift(v, -1))}><ChevronLeft className="h-4 w-4" /></button>
+      <div className="num min-w-0 flex-1 truncate rounded-lg border-2 border-ink bg-paper px-2 py-1.5 text-center text-sm font-bold">{v.d} {MONTHS[v.m - 1]} {v.y}</div>
+      <button aria-label={`${label} hari berikutnya`} className={btn} onClick={() => onChange(shift(v, 1))}><ChevronRight className="h-4 w-4" /></button>
+      <button aria-label={`${label} bulan berikutnya`} className={btn} onClick={() => onChange(shift(v, 0, 1))}><ChevronsRight className="h-4 w-4" /></button>
+    </div>
+  );
 }

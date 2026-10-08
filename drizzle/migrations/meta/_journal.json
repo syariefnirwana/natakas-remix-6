@@ -15,6 +15,13 @@
       "when": 1791478317500,
       "tag": "0001_remix_health_check",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791479326640,
+      "tag": "0002_public_activity_feed",
+      "breakpoints": true
     }
   ]
 }

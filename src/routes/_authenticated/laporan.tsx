@@ -93,7 +93,7 @@ function Laporan() {
       <h1 className="text-3xl font-extrabold">Laporan</h1>
       <div className="flex flex-wrap gap-2">{MODES.map(([k, l]) => <button key={k} className={chip(mode === k)} onClick={() => setMode(k)}>{l}</button>)}</div>
 
-      {mode !== "all" && (
+      {mode !== "all" && !(mode === "custom" && customKind === "range") && (
         <div className="flex flex-wrap gap-2">
           {mode === "daily" && <select className={sel} value={d} onChange={(e) => setD(+e.target.value)}>{Array.from({ length: daysInMonth(y, m) }, (_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}</select>}
           {mode !== "yearly" && <select className={sel} value={m} onChange={(e) => { setM(+e.target.value); setPickDays([]); setPickWeeks([]); setWeek(0); }}>{MONTHS.map((n, i) => <option key={n} value={i + 1}>{n}</option>)}</select>}

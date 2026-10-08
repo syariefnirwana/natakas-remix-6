@@ -16,6 +16,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedCatatRouteImport } from './routes/_authenticated/catat'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDompetRouteImport } from './routes/_authenticated/dompet'
+import { Route as AuthenticatedKotakMasukRouteImport } from './routes/_authenticated/kotak-masuk'
 import { Route as AuthenticatedLaporanRouteImport } from './routes/_authenticated/laporan'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedRiwayatRouteImport } from './routes/_authenticated/riwayat'
@@ -54,6 +55,11 @@ const AuthenticatedDompetRoute = AuthenticatedDompetRouteImport.update({
   path: '/dompet',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedKotakMasukRoute = AuthenticatedKotakMasukRouteImport.update({
+  id: '/kotak-masuk',
+  path: '/kotak-masuk',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedLaporanRoute = AuthenticatedLaporanRouteImport.update({
   id: '/laporan',
   path: '/laporan',
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/catat': typeof AuthenticatedCatatRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/dompet': typeof AuthenticatedDompetRoute
+  '/kotak-masuk': typeof AuthenticatedKotakMasukRoute
   '/laporan': typeof AuthenticatedLaporanRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/catat': typeof AuthenticatedCatatRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/dompet': typeof AuthenticatedDompetRoute
+  '/kotak-masuk': typeof AuthenticatedKotakMasukRoute
   '/laporan': typeof AuthenticatedLaporanRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/_authenticated/catat': typeof AuthenticatedCatatRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/dompet': typeof AuthenticatedDompetRoute
+  '/_authenticated/kotak-masuk': typeof AuthenticatedKotakMasukRoute
   '/_authenticated/laporan': typeof AuthenticatedLaporanRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/riwayat': typeof AuthenticatedRiwayatRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/catat'
     | '/dashboard'
     | '/dompet'
+    | '/kotak-masuk'
     | '/laporan'
     | '/profil'
     | '/riwayat'
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/catat'
     | '/dashboard'
     | '/dompet'
+    | '/kotak-masuk'
     | '/laporan'
     | '/profil'
     | '/riwayat'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/_authenticated/catat'
     | '/_authenticated/dashboard'
     | '/_authenticated/dompet'
+    | '/_authenticated/kotak-masuk'
     | '/_authenticated/laporan'
     | '/_authenticated/profil'
     | '/_authenticated/riwayat'
@@ -199,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDompetRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/kotak-masuk': {
+      id: '/_authenticated/kotak-masuk'
+      path: '/kotak-masuk'
+      fullPath: '/kotak-masuk'
+      preLoaderRoute: typeof AuthenticatedKotakMasukRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/laporan': {
       id: '/_authenticated/laporan'
       path: '/laporan'
@@ -228,6 +247,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCatatRoute: typeof AuthenticatedCatatRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDompetRoute: typeof AuthenticatedDompetRoute
+  AuthenticatedKotakMasukRoute: typeof AuthenticatedKotakMasukRoute
   AuthenticatedLaporanRoute: typeof AuthenticatedLaporanRoute
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
   AuthenticatedRiwayatRoute: typeof AuthenticatedRiwayatRoute
@@ -238,6 +258,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCatatRoute: AuthenticatedCatatRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDompetRoute: AuthenticatedDompetRoute,
+  AuthenticatedKotakMasukRoute: AuthenticatedKotakMasukRoute,
   AuthenticatedLaporanRoute: AuthenticatedLaporanRoute,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
   AuthenticatedRiwayatRoute: AuthenticatedRiwayatRoute,
